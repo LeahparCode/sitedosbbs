@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sempre em Nossos Corações | Nina & Thor</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           Variáveis CSS e Temas
+           ========================================================================== */
+        :root {
+            /* Tema Padrão (Neutro/Acolhedor) */
+            --bg-color: #fdfbfb;
+            --text-main: #555555;
+            --text-light: #777777;
+            --accent: #e0e0e0;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --paw-color: rgba(0, 0, 0, 0.03);
+        }
+
+        /* Tema Thor (Siamês: Creme, bege, marrom) */
+        body.theme-thor {
+            --bg-color: #f4ece1;
+            --text-main: #4a332a;
+            --text-light: #6d4c41;
+            --accent: #8d6e63;
+            --glass-bg: rgba(255, 253, 250, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --shadow: 0 8px 32px rgba(74, 51, 42, 0.08);
+            --paw-color: rgba(74, 51, 42, 0.04);
+        }
+
+        /* Tema Nina (Marrom e Verde) */
+        body.theme-nina {
+            --bg-color: #efebe9;
+            --text-main: #3e2723;
+            --text-light: #5d4037;
+            --accent: #81c784; /* Verde suave dos olhos */
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --shadow: 0 8px 32px rgba(62, 39, 35, 0.08);
+            --paw-color: rgba(62, 39, 35, 0.04);
+        }
+
+        /* ==========================================================================
+           Reset e Base
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 1.5s ease, color 1s ease;
+            position: relative;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+        }
+
+        /* ==========================================================================
+           Fundos Animados (Patinhas e Partículas)
+           ========================================================================== */
+        .bg-paws {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            /* Um padrão de patinhas SVG codificado em base64 e bem sutil */
+            background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8.5C13.3807 8.5 14.5 7.15685 14.5 5.5C14.5 3.84315 13.3807 2.5 12 2.5C10.6193 2.5 9.5 3.84315 9.5 5.5C9.5 7.15685 10.6193 8.5 12 8.5Z" fill="black"/><path d="M18.5 11.5C19.8807 11.5 21 10.1569 21 8.5C21 6.84315 19.8807 5.5 18.5 5.5C17.1193 5.5 16 6.84315 16 8.5C16 10.1569 17.1193 11.5 18.5 11.5Z" fill="black"/><path d="M5.5 11.5C6.88071 11.5 8 10.1569 8 8.5C8 6.84315 6.88071 5.5 5.5 5.5C4.11929 5.5 3 6.84315 3 8.5C3 10.1569 4.11929 11.5 5.5 11.5Z" fill="black"/><path d="M12 21.5C15.5 21.5 18.5 19 18.5 15.5C18.5 13.5 17 12 15 12C14 12 13.5 13 12 13C10.5 13 10 12 9 12C7 12 5.5 13.5 5.5 15.5C5.5 19 8.5 21.5 12 21.5Z" fill="black"/></svg>');
+            background-size: 150px 150px;
+            opacity: 0.03; /* Trocado via JS pelo var(--paw-color) simulado */
+            animation: scrollPaws 60s linear infinite;
+            transition: opacity 1s ease;
+        }
+
+        @keyframes scrollPaws {
+            0% { background-position: 0 0; }
+            100% { background-position: 300px 300px; }
+        }
+
+        #particles {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: -10px;
+            width: 4px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatUp linear forwards;
+            filter: blur(1px);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+
+        /* Efeito Patinha ao clicar */
+        .click-paw {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 8.5C13.3807 8.5 14.5 7.15685 14.5 5.5C14.5 3.84315 13.3807 2.5 12 2.5C10.6193 2.5 9.5 3.84315 9.5 5.5C9.5 7.15685 10.6193 8.5 12 8.5ZM18.5 11.5C19.8807 11.5 21 10.1569 21 8.5C21 6.84315 19.8807 5.5 18.5 5.5C17.1193 5.5 16 6.84315 16 8.5C16 10.1569 17.1193 11.5 18.5 11.5ZM5.5 11.5C6.88071 11.5 8 10.1569 8 8.5C8 6.84315 6.88071 5.5 5.5 5.5C4.11929 5.5 3 6.84315 3 8.5C3 10.1569 4.11929 11.5 5.5 11.5ZM12 21.5C15.5 21.5 18.5 19 18.5 15.5C18.5 13.5 17 12 15 12C14 12 13.5 13 12 13C10.5 13 10 12 9 12C7 12 5.5 13.5 5.5 15.5C5.5 19 8.5 21.5 12 21.5Z"/></svg>');
+            background-size: cover;
+            color: var(--accent);
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            pointer-events: none;
+            animation: clickEffect 0.8s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes clickEffect {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+        /* ==========================================================================
+           Layout Principal & Glassmorphism
+           ========================================================================== */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.5s ease;
+        }
+
+        /* Header / Hero */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            width: 100%;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Seção de Escolha */
+        #selection-section {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            width: 100%;
+            flex-wrap: wrap;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .cat-card {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cat-card:hover::before {
+            opacity: 1;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        }
+
+        .cat-card-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem auto;
+            border: 4px solid var(--glass-border);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+
+        .cat-card:hover .cat-card-img {
+            transform: scale(1.05);
+        }
+
+        .cat-card h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cat-card p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Seção Memorial (Detalhes) */
+        #memorial-section {
+            display: none; /* Controlado via JS */
+            width: 100%;
+            max-width: 800px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .btn-back {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            color: var(--accent);
+        }
+
+        #mem-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            margin: 0 auto 2rem auto;
+        }
+
+        #mem-name {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        #mem-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        #mem-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        /* Contador de idade */
+        .counter {
+            display: inline-flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            margin-top: 1rem;
+        }
+
+        .counter-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .counter-val {
+            font-size: 1.8rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+        }
+
+        .counter-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            animation: fadeIn 2s ease-out;
+        }
+
+        .dev-credit {
+            margin-top: 0.8rem;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            letter-spacing: 0.5px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* ==========================================================================
+           Animações
+           ========================================================================== */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+
+        /* Efeitos de clique nos cards */
+        .cat-card.clicked {
+            animation: popOut 0.5s ease-in-out forwards;
+            pointer-events: none;
+        }
+
+        /* Cores temáticas ao clicar */
+        #card-nina.clicked {
+            background: rgba(129, 199, 132, 0.25); /* Verde bem fraquinho */
+            border-color: #81c784;
+            box-shadow: 0 8px 32px rgba(129, 199, 132, 0.2);
+        }
+
+        #card-thor.clicked {
+            background: rgba(141, 110, 99, 0.15); /* Creme/Marrom fraquinho */
+            border-color: #8d6e63;
+            box-shadow: 0 8px 32px rgba(141, 110, 99, 0.2);
+        }
+
+        .cat-card.not-clicked {
+            animation: shrinkFade 0.5s ease-in-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes popOut {
+            0% { transform: scale(1); opacity: 1; }
+            40% { transform: scale(0.92); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0; filter: blur(2px); }
+        }
+
+        @keyframes shrinkFade {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.85); opacity: 0; filter: blur(4px); }
+        }
+
+        /* Slider de Fotos */
+        .gallery-section {
+            margin-top: 3rem;
+            width: 100%;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .gallery-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .slider-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .slider {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 1rem 0;
+            scrollbar-width: none; /* Firefox */
+            width: 100%;
+        }
+
+        .slider::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .slider img {
+            height: 200px;
+            width: 250px;
+            object-fit: cover;
+            border-radius: 16px;
+            scroll-snap-align: center;
+            box-shadow: var(--shadow);
+            border: 3px solid var(--glass-border);
+            flex-shrink: 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .slider img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .slider-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            z-index: 10;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(4px);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .slider-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .slider-btn.prev { left: -20px; }
+        .slider-btn.next { right: -20px; }
+
+        /* Estilos do Lightbox (Ecrã Inteiro) */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+
+        .lightbox.active img {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            cursor: pointer;
+            font-family: sans-serif;
+            line-height: 1;
+            transition: color 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent);
+        }
+
+        /* Responsividade Perfeita para Mobile */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            
+            header { padding: 1.5rem 1rem; margin-bottom: 2rem; }
+            header h1 { font-size: 1.8rem; }
+            header p { font-size: 1rem; }
+            
+            #selection-section { flex-direction: column; align-items: center; gap: 1.5rem; }
+            .cat-card { width: 100%; max-width: 100%; padding: 1.5rem; }
+            
+            #memorial-section { padding: 2rem 1rem; }
+            .btn-back { top: 1rem; left: 1rem; font-size: 0.9rem; }
+            
+            #mem-photo { width: 160px; height: 160px; margin-bottom: 1.5rem; }
+            #mem-name { font-size: 2.2rem; }
+            #mem-quote { font-size: 1.05rem; margin-bottom: 1.5rem; padding: 0 10px; }
+            #mem-text { font-size: 1rem; line-height: 1.6; padding: 0 5px; }
+
+            /* Contador no Mobile */
+            .counter { 
+                width: auto; 
+                display: inline-flex; 
+                gap: 0.5rem; 
+                padding: 1rem 1.5rem; 
+            }
+            .counter-val { font-size: 1.5rem; }
+            .counter-label { font-size: 0.7rem; }
+            
+            /* Galeria no Mobile - Mantém os botões, mas menores */
+            .gallery-section { margin-top: 2rem; padding-top: 1.5rem; }
+            .gallery-section h3 { font-size: 1.5rem; }
+            
+            .slider-wrapper { padding: 0; }
+            .slider img { height: 180px; width: 220px; border-width: 2px; }
+            
+            .slider-btn { width: 35px; height: 35px; font-size: 1rem; }
+            .slider-btn.prev { left: 5px; }
+            .slider-btn.next { right: 5px; }
+
+            /* Lightbox mobile fechar */
+            .lightbox-close { top: 15px; right: 20px; font-size: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Elementos de Fundo -->
+    <div class="bg-paws"></div>
+    <div id="particles"></div>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header class="glass" id="main-header">
+            <h1>Para sempre em nossos corações 🐾</h1>
+            <p>A saudade é eterna, mas o amor também.</p>
+        </header>
+
+        <!-- Main Content Area -->
+        <main style="width: 100%; display: flex; justify-content: center;">
+            
+            <!-- Escolha do Pet -->
+            <section id="selection-section">
+                <!-- Card Nina -->
+                <div class="cat-card glass" id="card-nina" onclick="openMemorial('nina', 'card-nina')">
+                    <!-- Instrução: Substitua a URL abaixo pela foto real da Nina -->
+                    <img src="https://i.imgur.com/kIUHS52.jpeg" alt="Foto da Nina" class="cat-card-img">
+                    <h2>Nina 🐾</h2>
+                    <p>Nossa doce menina dos olhos verdes.</p>
+                </div>
+
+                <!-- Card Thor -->
+                <div class="cat-card glass" id="card-thor" onclick="openMemorial('thor', 'card-thor')">
+                    <!-- Instrução: Substitua a URL abaixo pela foto real do Thor -->
+                    <img src="https://i.imgur.com/xzUkP30.jpeg" alt="Foto do Thor" class="cat-card-img">
+                    <h2>Thor 🐾</h2>
+                    <p>O encanto e a elegância em forma de gato.</p>
+                </div>
+            </section>
+
+            <!-- Memorial Individual (Oculto inicialmente) -->
+            <section id="memorial-section" class="glass">
+                <button class="btn-back" onclick="closeMemorial()">
+                    ← Voltar
+                </button>
+                
+                <img id="mem-photo" src="" alt="Foto do Pet">
+                <h2 id="mem-name" class="serif">Nome</h2>
+                <p id="mem-quote">(Frase especial)</p>
+                <div id="mem-text">Texto de homenagem...</div>
+
+                <div class="counter">
+                    <div class="counter-item">
+                        <span class="counter-val" id="count-years">0</span>
+                        <span class="counter-label">Anos</span>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-light);">Bem vividos e cheios de amor.</p>
+
+                <!-- Nova Seção de Galeria -->
+                <div class="gallery-section">
+                    <h3 class="serif">Galeria de Lembranças</h3>
+                    <div class="slider-wrapper">
+                        <button class="slider-btn prev" onclick="scrollSlider(-1)">&#10094;</button>
+                        <div class="slider" id="cat-gallery">
+                            <!-- Imagens injetadas via JavaScript -->
+                        </div>
+                        <button class="slider-btn next" onclick="scrollSlider(1)">&#10095;</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Rodapé -->
+        <footer>
+            <p>Com amor e saudade. Uma homenagem estrelar.</p>
+            <p class="dev-credit">Desenvolvido por Leahpar Code</p>
+        </footer>
+    </div>
+
+    <!-- Lightbox (Ecrã Inteiro) -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+        <img id="lightbox-img" src="" alt="Foto em Ecrã Inteiro">
+    </div>
+
+    <!-- Lógica JavaScript -->
+    <script>
+        /* ==========================================================================
+           1. Dados dos Gatos (Edite os textos e as 9 fotos aqui)
+           ========================================================================== */
+        const catData = {
+            nina: {
+                name: "Nina 🐾",
+                photo: "https://i.imgur.com/gGTN8XV.jpeg",
+                quote: "(Nossa princesinha)",
+                text: "Nossa doce Nina. Você trouxe uma alegria silenciosa e um amor incondicional para os nossos dias. Sentimos falta das suas patinhas pela casa, do seu carinho e de como você sabia exatamente quando precisávamos de companhia. Você deixou pegadas que o tempo jamais vai apagar.",
+                age: 5,
+                // Lista das 9 fotos da galeria da Nina
+                gallery: [
+                    "https://i.imgur.com/vGtGRUk.jpeg",
+                    "https://i.imgur.com/gfH4dPO.jpeg",
+                    "https://i.imgur.com/ndweHxt.jpeg",
+                    "https://i.imgur.com/Wb4yyQJ.jpeg",
+                    "https://i.imgur.com/6OAIAzn.jpeg",
+                    "https://i.imgur.com/9sPkiu9.jpeg",
+                    "https://i.imgur.com/iLSe7d9.jpeg",
+                    "https://i.imgur.com/l5LnSJ4.jpeg",
+                    "https://i.imgur.com/jCV75To.jpeg"
+                ]
+            },
+            thor: {
+                name: "Thor 🐾",
+                photo: "https://i.imgur.com/SzqvxuT.jpeg",
+                quote: "(Nosso pokemonzinho)",
+                text: "Nosso querido Thor. Sua presença majestosa e seus miados conversadores faziam da nossa casa um lar de verdade. Sentimos saudades do seu calor, da sua personalidade marcante e do companheirismo fiel. Onde quer que você esteja, nosso amor sempre o alcançará.",
+                age: 7,
+                // Lista das 9 fotos da galeria do Thor
+                gallery: [
+                    "https://i.imgur.com/aVH1nF4.jpeg",
+                    "https://i.imgur.com/laTHfWo.jpeg",
+                    "https://i.imgur.com/UGyaVyx.jpeg",
+                    "https://i.imgur.com/sO8L0Sa.jpeg",
+                    "https://i.imgur.com/r0ubdq9.jpeg",
+                    "https://i.imgur.com/iPvbpOB.jpeg",
+                    "https://i.imgur.com/RD8bkjL.jpeg",
+                    "https://i.imgur.com/KwgYdPi.jpeg",
+                    "https://i.imgur.com/utBwaAz.jpeg"
+                ]
+            }
+        };
+
+        /* ==========================================================================
+           2. Lógica de Navegação e Temas
+           ========================================================================== */
+        const selectionSection = document.getElementById('selection-section');
+        const memorialSection = document.getElementById('memorial-section');
+
+        function openMemorial(catId, cardId) {
+            const data = catData[catId];
+            
+            // Preencher os dados
+            document.getElementById('mem-photo').src = data.photo;
+            document.getElementById('mem-name').innerText = data.name;
+            document.getElementById('mem-quote').innerText = data.quote;
+            document.getElementById('mem-text').innerText = data.text;
+
+            // Preencher a galeria de fotos
+            const galleryContainer = document.getElementById('cat-gallery');
+            galleryContainer.innerHTML = ''; // Limpa as fotos anteriores
+            data.gallery.forEach(imgSrc => {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.alt = `Lembrança de ${data.name}`;
+                // Adiciona a funcionalidade de clique para o ecrã inteiro
+                img.onclick = () => openLightbox(imgSrc);
+                galleryContainer.appendChild(img);
+            });
+
+            // Definir a idade do pet
+            document.getElementById('count-years').innerText = data.age;
+
+            // Animação individual dos cards
+            const allCards = document.querySelectorAll('.cat-card');
+            allCards.forEach(card => {
+                if(card.id === cardId) {
+                    card.classList.add('clicked');
+                } else {
+                    card.classList.add('not-clicked');
+                }
+            });
+
+            // Transição visual (aguarda a animação dos cards)
+            setTimeout(() => {
+                selectionSection.style.display = 'none';
+                
+                // Mudar tema do site
+                document.body.className = `theme-${catId}`;
+                
+                // Mostrar memorial
+                memorialSection.style.display = 'block';
+                // Resetar animação
+                memorialSection.style.animation = 'none';
+                memorialSection.offsetHeight; /* trigger reflow */
+                memorialSection.style.animation = 'fadeIn 1s ease-out';
+                
+                // Limpar as classes de animação dos cards para quando voltar
+                allCards.forEach(card => {
+                    card.classList.remove('clicked', 'not-clicked');
+                });
+            }, 500);
+        }
+
+        function closeMemorial() {
+            memorialSection.classList.add('fade-out');
+            
+            setTimeout(() => {
+                memorialSection.style.display = 'none';
+                memorialSection.classList.remove('fade-out');
+                
+                // Voltar pro tema padrão
+                document.body.className = '';
+                
+                // Mostrar seleção
+                selectionSection.style.display = 'flex';
+                selectionSection.style.animation = 'none';
+                selectionSection.offsetHeight; /* trigger reflow */
+                selectionSection.style.animation = 'fadeIn 1s ease-out';
+            }, 500);
+        }
+
+        /* ==========================================================================
+           3. Lógica do Slider e Lightbox (Ecrã Inteiro)
+           ========================================================================== */
+        // Função para rolar a galeria
+        function scrollSlider(direction) {
+            const slider = document.getElementById('cat-gallery');
+            const scrollAmount = 266; // largura da imagem + gap aproximado
+            slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        // Função para abrir o ecrã inteiro
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+            
+            // Pequeno atraso para permitir a transição do CSS (fade in e scale)
+            setTimeout(() => {
+                lightbox.classList.add('active');
+            }, 10);
+        }
+
+        // Função para fechar o ecrã inteiro
+        function closeLightbox(e) {
+            // Fecha apenas se clicar no fundo escuro ou no botão 'X'
+            if (e.target.id === 'lightbox' || e.target.classList.contains('lightbox-close')) {
+                const lightbox = document.getElementById('lightbox');
+                lightbox.classList.remove('active');
+                
+                // Aguarda a animação terminar antes de esconder
+                setTimeout(() => {
+                    lightbox.style.display = 'none';
+                    document.getElementById('lightbox-img').src = '';
+                }, 300);
+            }
+        }
+
+        /* ==========================================================================
+           4. Sistema de Partículas ("Poeira Mágica")
+           ========================================================================== */
+        const particlesContainer = document.getElementById('particles');
+        
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Posição horizontal aleatória
+            particle.style.left = Math.random() * 100 + 'vw';
+            
+            // Tamanho aleatório entre 2px e 5px
+            const size = Math.random() * 3 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Duração da animação entre 4s e 8s
+            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            
+            particlesContainer.appendChild(particle);
+            
+            // Remove do DOM após a animação
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        }
+
+        // Cria uma partícula nova a cada 400ms
+        setInterval(createParticle, 400);
+
+        /* ==========================================================================
+           5. Efeito de Patinha ao Clicar
+           ========================================================================== */
+        document.addEventListener('click', function(e) {
+            // Ignorar se clicou nos botões, cards ou fotos do slider para não poluir
+            if(e.target.closest('button') || e.target.closest('.cat-card') || e.target.tagName === 'IMG' || e.target.closest('#lightbox')) return;
+
+            const paw = document.createElement('div');
+            paw.className = 'click-paw';
+            paw.style.left = e.pageX + 'px';
+            paw.style.top = e.pageY + 'px';
+            
+            document.body.appendChild(paw);
+            
+            setTimeout(() => {
+                paw.remove();
+            }, 800); // Duração da animação
+        });
+
+    </script>
+</body>
+</html>
